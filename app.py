@@ -8,7 +8,6 @@ bot = telebot.TeleBot(config.token)
 app = Flask(__name__)
 ia = imdb.IMDb() # by default access the web
 
-
 @bot.message_handler(commands=["start"])
 def test(message):
     user_markup = telebot.types.ReplyKeyboardMarkup(True, True)
@@ -44,7 +43,6 @@ def searchartist(msg):
                     S = S + str(the_unt.data['actor'][i]) + "\n"
             S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
         except LookupError:
-#        except:
             if len(the_unt.data['actress'])<5:
                 bot.send_message(msg.chat.id, the_unt['bio'])
             else:
@@ -87,4 +85,3 @@ def webhook():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
-#app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
