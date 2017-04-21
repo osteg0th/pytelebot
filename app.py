@@ -76,7 +76,7 @@ def charactersearch(msg):
         S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
     bot.send_message(msg.chat.id, S)
 
-@app.route("/bot", methods=['POST'])
+@app.route("/" + token, methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "POST", 200
@@ -87,5 +87,6 @@ def webhook():
     bot.set_webhook(url="https://pytelebot.herokuapp.com/" + token)
     return "CONNECTED", 200
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
+#if __name__ == '__main__':
+#    app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
+app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
