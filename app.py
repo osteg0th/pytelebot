@@ -8,6 +8,7 @@ bot = telebot.TeleBot(config.token)
 app = Flask(__name__)
 ia = imdb.IMDb() # by default access the web
 
+@bot.
 
 @bot.message_handler(commands=["start"])
 def test(message):
@@ -58,21 +59,21 @@ def searchartist(msg):
             S = S + item['name'].encode('utf-8') + " http://www.imdb.com/name/nm"+str(item.personID) + "\n"
     if len(S1) != 0:
         bot.send_message(msg.chat.id, S1)
-        bot.send_message(msg.chat.id, S)
+    bot.send_message(msg.chat.id, S, disable_web_page_preview=True)
 
 def searchfilm(msg):
     s_result = ia.search_movie(msg.text)
     S = "Nothing found"
     for item in s_result:
         S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
-    bot.send_message(msg.chat.id, S)
+    bot.send_message(msg.chat.id, S, disable_web_page_preview=True)
 
 def charactersearch(msg):
     s_result = ia.search_character(msg.text)
     S = "Nothing found"
     for item in s_result:
         S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
-    bot.send_message(msg.chat.id, S)
+    bot.send_message(msg.chat.id, S, disable_web_page_preview=True)
 
 @app.route("/" + config.token, methods=['POST'])
 def getMessage():
