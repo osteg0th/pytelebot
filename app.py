@@ -2,8 +2,7 @@ import os
 import telebot
 import imdb
 
-from flask import Flask, render_template, request, redirect, url_for
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask import Flask, request
 
 token = '375244280:AAFB7_HdF0AYKaFQwMw00ajOWpyKdsePebE'
 
@@ -34,39 +33,31 @@ def searchartist(msg):
     S = "Nothing found"
     S1 = ""
     s_result = ia.search_person(msg.text)
-    if len(s_result) == 0:
-        print "Nothing found"
+    if " " in msg.text:
+        the_unt = s_result[0]
+        ia.update(the_unt)
+        try:
+            if len(the_unt.data['actor'])<5:
+                bot.send_message(msg.chat.id, the_unt['bio'])
+            else:
+                S = "Filmlist to long. View last 10 films:\n"
+                for i in range(0,10):
+                    S = S + str(the_unt.data['actor'][i]) + "\n"
+            S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
+        except:
+            if len(the_unt.data['actress'])<5:
+                bot.send_message(msg.chat.id, the_unt['bio'])
+            else:
+                S = "Filmlist to long. View last 10 films:\n"
+                for i in range(0,10):
+                    S = S +str(the_unt.data['actress'][i]) + "\n"
+            S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
     else:
-        if " " in msg.text:
-            the_unt = s_result[0]
-            ia.update(the_unt)
-            try:
-                if len(the_unt.data['actor'])<5:
-                    bot.send_message(msg.chat.id, the_unt['bio'])
-                else:
-                    print "Filmlist to long. View last 10 films:"
-                    S = "Filmlist to long. View last 10 films:\n"
-                    for i in range(0,10):
-                        print the_unt.data['actor'][i]
-                        S = S + str(the_unt.data['actor'][i]) + "\n"
-                S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
-            except:
-                if len(the_unt.data['actress'])<5:
-                    bot.send_message(msg.chat.id, the_unt['bio'])
-                else:
-                    print "Filmlist to big. View last 10 films:"
-                    S = "Filmlist to long. View last 10 films:\n"
-                    for i in range(0,10):
-                        print the_unt.data['actress'][i]
-                        S = S +str(the_unt.data['actress'][i]) + "\n"
-                S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
-        else:
-            S = "Try to input full name"
-            for item in s_result:
-                print item['name'], "http://www.imdb.com/name/nm"+item.personID
-                S = S + item['name'].encode('utf-8') + " http://www.imdb.com/name/nm"+str(item.personID) + "\n"
-        if len(S1) != 0:
-            bot.send_message(msg.chat.id, S1)
+        S = "Try to input full name"
+        for item in s_result:
+            S = S + item['name'].encode('utf-8') + " http://www.imdb.com/name/nm"+str(item.personID) + "\n"
+    if len(S1) != 0:
+        bot.send_message(msg.chat.id, S1)
     bot.send_message(msg.chat.id, S)
 
 
@@ -75,20 +66,14 @@ def searchfilm(msg):
     s_result = ia.search_movie(msg.text)
     S = "Nothing found"
     for item in s_result:
-        print item['long imdb canonical title'], item.movieID
         S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
-    if len(s_result) == 0:
-        print S
     bot.send_message(msg.chat.id, S)
 
 def charactersearch(msg):
     s_result = ia.search_character(msg.text)
     S = "Nothing found"
     for item in s_result:
-        item['long imdb canonical title'], item.characterID
         S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
-    if len(s_result) == 0:
-        print S
     bot.send_message(msg.chat.id, S)
 
 @app.route("/bot", methods=['POST'])
@@ -103,5 +88,4 @@ def webhook():
     return "CONNECTED", 200
 
 if __name__ == '__main__':
-  port = int(os.environ.get('PORT', 5000))
-  app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
