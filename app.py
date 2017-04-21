@@ -28,6 +28,7 @@ def search(message):
         bot.register_next_step_handler(message, charactersearch)
 
 def searchartist(msg):
+    bot.send_chat_action(msg.chat.id, 'typing')
     S = "Nothing found"
     S1 = ""
     s_result = ia.search_person(msg.text)
@@ -59,6 +60,7 @@ def searchartist(msg):
     bot.send_message(msg.chat.id, S, disable_web_page_preview=True)
 
 def searchfilm(msg):
+    bot.send_chat_action(msg.chat.id, 'typing')
     s_result = ia.search_movie(msg.text)
     S = "Nothing found"
     for item in s_result:
@@ -66,6 +68,7 @@ def searchfilm(msg):
     bot.send_message(msg.chat.id, S, disable_web_page_preview=True)
 
 def charactersearch(msg):
+    bot.send_chat_action(msg.chat.id, 'typing')
     s_result = ia.search_character(msg.text)
     S = "Nothing found"
     for item in s_result:
