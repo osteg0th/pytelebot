@@ -15,7 +15,7 @@ def test(message):
     user_markup = telebot.types.ReplyKeyboardMarkup(True, True)
     user_markup.row("Actor", "Title")
     user_markup.row("Character")
-    bot.send_message(message.from_user.id, 'Выберите пункт меню:', reply_markup=user_markup)
+    bot.send_message(message.from_user.id, 'Choose menu:', reply_markup=user_markup)
 
 @bot.message_handler(func=lambda mess: "Actor" == mess.text or "Title" == mess.text or "Keywords" == mess.text, content_types=['text'])
 def search(message):
