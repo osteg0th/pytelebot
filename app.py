@@ -1,39 +1,107 @@
 import os
+import telebot
+import imdb
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 
+token = '375244280:AAFB7_HdF0AYKaFQwMw00ajOWpyKdsePebE'
+
+bot = telebot.TeleBot(token)
 app = Flask(__name__)
+ia = imdb.IMDb() # by default access the web
 
-DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:////tmp/flask_app.db')
+@bot.message_handler(commands = ["start"])
+def test(message):
+    user_markup = telebot.types.ReplyKeyboardMarkup(True, True)
+    user_markup.row("Actor", "Title")
+    user_markup.row("Character")
+    bot.send_message(message.from_user.id, 'Выберите пункт меню:', reply_markup=user_markup)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-db = SQLAlchemy(app)
+@bot.message_handler(func=lambda mess: "Actor" == mess.text or "Title" == mess.text or "Keywords" == mess.text, content_types=['text'])
+def search(message):
+    if (message.text == "Actor"):
+        bot.send_message(message.chat.id, "Write name:")
+        bot.register_next_step_handler(message, searchartist)
+    elif (message.text == "Title"):
+        bot.send_message(message.chat.id, "Write title:")
+        bot.register_next_step_handler(message, searchfilm)
+    elif (message.text == "Character"):
+        bot.send_message(message.chat.id, "Write character name:")
+        bot.register_next_step_handler(message, searchfilm)
+
+def searchartist(msg):
+    S = "Nothing found"
+    S1 = ""
+    s_result = ia.search_person(msg.text)
+    if len(s_result) == 0:
+        print "Nothing found"
+    else:
+        if " " in msg.text:
+            the_unt = s_result[0]
+            ia.update(the_unt)
+            try:
+                if len(the_unt.data['actor'])<5:
+                    bot.send_message(msg.chat.id, the_unt['bio'])
+                else:
+                    print "Filmlist to long. View last 10 films:"
+                    S = "Filmlist to long. View last 10 films:\n"
+                    for i in range(0,10):
+                        print the_unt.data['actor'][i]
+                        S = S + str(the_unt.data['actor'][i]) + "\n"
+                S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
+            except:
+                if len(the_unt.data['actress'])<5:
+                    bot.send_message(msg.chat.id, the_unt['bio'])
+                else:
+                    print "Filmlist to big. View last 10 films:"
+                    S = "Filmlist to long. View last 10 films:\n"
+                    for i in range(0,10):
+                        print the_unt.data['actress'][i]
+                        S = S +str(the_unt.data['actress'][i]) + "\n"
+                S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
+        else:
+            S = "Try to input full name"
+            for item in s_result:
+                print item['name'], "http://www.imdb.com/name/nm"+item.personID
+                S = S + item['name'].encode('utf-8') + " http://www.imdb.com/name/nm"+str(item.personID) + "\n"
+        if len(S1) != 0:
+            bot.send_message(msg.chat.id, S1)
+    bot.send_message(msg.chat.id, S)
 
 
-class User(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(100))
-  email = db.Column(db.String(100))
 
-  def __init__(self, name, email):
-    self.name = name
-    self.email = email
+def searchfilm(msg):
+    s_result = ia.search_movie(msg.text)
+    S = "Nothing found"
+    for item in s_result:
+        print item['long imdb canonical title'], item.movieID
+        S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
+    if len(s_result) == 0:
+        print S
+    bot.send_message(msg.chat.id, S)
 
+def charactersearch(msg):
+    s_result = ia.search_character(msg.text)
+    S = "Nothing found"
+    for item in s_result:
+        item['long imdb canonical title'], item.characterID
+        S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
+    if len(s_result) == 0:
+        print S
+    bot.send_message(msg.chat.id, S)
 
-@app.route('/', methods=['GET'])
-def index():
-  return render_template('index.html', users=User.query.all())
+@app.route("/bot", methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "POST", 200
 
-
-@app.route('/user', methods=['POST'])
-def user():
-  u = User(request.form['name'], request.form['email'])
-  db.session.add(u)
-  db.session.commit()
-  return redirect(url_for('index'))
+@app.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url="https://pytelebot.herokuapp.com/" + token)
+    return "CONNECTED", 200
 
 if __name__ == '__main__':
-  db.create_all()
   port = int(os.environ.get('PORT', 5000))
   app.run(host='0.0.0.0', port=port, debug=True)
