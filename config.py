@@ -1,17 +1,23 @@
-import app
+import telebot
+import imdb
+from flask import Flask
+
 
 token = '375244280:AAGkTnPEmuVOapKzXguixWZmnVmOP41X_AY'
+bot = telebot.TeleBot(token)
+app = Flask(__name__)
+ia = imdb.IMDb() # by default access the web
 
 def searchartist(msg):
     S = "Nothing found"
     S1 = ""
-    s_result = app.ia.search_person(msg.text)
+    s_result = ia.search_person(msg.text)
     if " " in msg.text:
         the_unt = s_result[0]
-        app.ia.update(the_unt)
+        ia.update(the_unt)
         try:
             if len(the_unt.data['actor'])<5:
-                app.bot.send_message(msg.chat.id, the_unt['bio'])
+                bot.send_message(msg.chat.id, the_unt['bio'])
             else:
                 S = "Filmlist to long. View last 10 films:\n"
                 for i in range(0,10):
@@ -20,7 +26,7 @@ def searchartist(msg):
         except LookupError:
 #        except:
             if len(the_unt.data['actress'])<5:
-                app.bot.send_message(msg.chat.id, the_unt['bio'])
+                bot.send_message(msg.chat.id, the_unt['bio'])
             else:
                 S = "Filmlist to long. View last 10 films:\n"
                 for i in range(0,10):
@@ -31,19 +37,19 @@ def searchartist(msg):
         for item in s_result:
             S = S + item['name'].encode('utf-8') + " http://www.imdb.com/name/nm"+str(item.personID) + "\n"
     if len(S1) != 0:
-        app.bot.send_message(msg.chat.id, S1)
-        app.bot.send_message(msg.chat.id, S)
+        bot.send_message(msg.chat.id, S1)
+        bot.send_message(msg.chat.id, S)
 
 def searchfilm(msg):
-    s_result = app.ia.search_movie(msg.text)
+    s_result = ia.search_movie(msg.text)
     S = "Nothing found"
     for item in s_result:
         S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
-    app.bot.send_message(msg.chat.id, S)
+    bot.send_message(msg.chat.id, S)
 
 def charactersearch(msg):
-    s_result = app.ia.search_character(msg.text)
+    s_result = ia.search_character(msg.text)
     S = "Nothing found"
     for item in s_result:
         S = S + item['long imdb canonical title'].encode('utf-8') + " http://www.imdb.com/title/tt" + str(item.movieID) + "\n"
-    app.bot.send_message(msg.chat.id, S)
+    bot.send_message(msg.chat.id, S)
