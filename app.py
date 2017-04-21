@@ -10,7 +10,7 @@ ia = imdb.IMDb() # by default access the web
 
 @bot.message_handler(commands=["start"])
 def test(message):
-    user_markup = telebot.types.ReplyKeyboardMarkup(True, True)
+    user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
     user_markup.row("Actor", "Title")
     user_markup.row("Character")
     bot.send_message(message.from_user.id, 'Choose menu:', reply_markup=user_markup)
@@ -51,7 +51,7 @@ def searchartist(msg):
                     S = S + str(the_unt.data['actress'][i]) + "\n"
             S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
     else:
-        S = "Try to input full name"
+        S = "Try to input full name\n"
         for item in s_result:
             S = S + item['name'].encode('utf-8') + " http://www.imdb.com/name/nm"+str(item.personID) + "\n"
     if len(S1) != 0:
