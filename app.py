@@ -8,11 +8,6 @@ bot = telebot.TeleBot(config.token)
 app = Flask(__name__)
 ia = imdb.IMDb() # by default access the web
 
-<<<<<<< HEAD
-@bot.
-
-=======
->>>>>>> 9dfc261a45dd0fdec9dfcaf952e7cd4683693aea
 @bot.message_handler(commands=["start"])
 def test(message):
     user_markup = telebot.types.ReplyKeyboardMarkup(True, True)
