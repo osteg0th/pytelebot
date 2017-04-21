@@ -44,8 +44,8 @@ def searchartist(msg):
                 for i in range(0,10):
                     S = S + str(the_unt.data['actor'][i]) + "\n"
             S1 = str(the_unt['name']) + " http://www.imdb.com/name/nm"+str(the_unt.personID) + "\n"
-#        except LookupError:
-        except:
+        except LookupError:
+#        except:
             if len(the_unt.data['actress'])<5:
                 bot.send_message(msg.chat.id, the_unt['bio'])
             else:
@@ -88,6 +88,6 @@ def webhook():
     bot.set_webhook(url="https://pytelebot.herokuapp.com/" + token)
     return "CONNECTED", 200
 
-#if __name__ == '__main__':
-#    app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
-app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
+#app.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
