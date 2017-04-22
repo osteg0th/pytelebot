@@ -10,7 +10,7 @@ ia = imdb.IMDb() # by default access the web
 
 @bot.message_handler(commands=["help"])
 def help(message):
-    bot.send_message(message.chat.id, "This bot can search film or actors on IMDb.\n Actor - search by name. List of names that contain keyword or full name;\n Title - search by film title;\n Character - view list of <20 characters that similar to keyword.")
+    bot.send_message(message.chat.id, "This bot can search film or actors on IMDb.\n Actor - search by name. List of names that contain keyword or full name;\n Title - search by film title;\n Character - view list of <20 characters that similar to keyword.\n Write /start to use keyboard.")
 
 @bot.message_handler(commands=["start"])
 def test(message):

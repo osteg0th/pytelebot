@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8d34d652-bd7d-47a4-99a9-36ea0eb515a6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,7 +19,7 @@
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
-              <caret line="12" column="4" lean-forward="false" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+              <caret line="12" column="288" lean-forward="false" selection-start-line="12" selection-start-column="288" selection-end-line="12" selection-end-column="288" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -244,7 +245,14 @@
       <option name="project" value="LOCAL" />
       <updated>1492896849044</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="make it better">
+      <created>1492897055611</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1492897055611</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -490,7 +498,7 @@
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
-          <caret line="12" column="4" lean-forward="false" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+          <caret line="12" column="288" lean-forward="false" selection-start-line="12" selection-start-column="288" selection-end-line="12" selection-end-column="288" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
